@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, computed, effect, input, signal } from '@angular/core';
 import { Banner } from '../../model/banner.interface';
 import { CommonModule } from '@angular/common';
-import { fromEvent, last, map, switchMap, takeLast, takeUntil } from 'rxjs';
+import { fromEvent, interval, last, map, switchMap, takeLast, takeUntil, throttle } from 'rxjs';
 
 @Component({
   selector: 'app-image-carousel',
@@ -13,13 +13,14 @@ import { fromEvent, last, map, switchMap, takeLast, takeUntil } from 'rxjs';
 export class ImageCarouselComponent implements AfterViewInit {
   banners = input<Banner[]>([]);
   activeBannerIndex = signal<number>(0);
-  //coordinates = signal<{ initialX?: number, finalX?: number } | null>(null);
   initialX = signal<number>(0);
   x = signal<number>(0);
   finalX = signal<number>(0);
-  diff = computed<number>(() => {const d = this.initialX() - this.x(); console.log(d); return d;
-  });
-  private threshold = 60;
+  transition = false;
+  diff = computed<number>(() => this.initialX() - this.x());
+  private threshold = 80;
+  offset = 0;
+  width = window.innerWidth;
 
   constructor() {
     // effect(() => {
@@ -34,21 +35,31 @@ export class ImageCarouselComponent implements AfterViewInit {
     const touchStart$ = fromEvent<TouchEvent>(document, 'touchstart');
     const touchMove$ = fromEvent<TouchEvent>(document, 'touchmove');
     const touchEnd$ = fromEvent<TouchEvent>(document, 'touchend');
-    const swipe$ = touchStart$.pipe(map(t => {
+    const swipe$ = touchStart$.pipe(
+      map(t => {
+        
+      this.transition = false;
       this.initialX.set(t.touches[0].clientX); 
       this.x.set(t.touches[0].clientX);
-      return t;}), 
-      switchMap(_ => touchMove$.pipe(map(m => {this.x.set(m.touches[0].clientX); return m;}),
-      takeUntil(touchEnd$),
-      last(undefined, { touches: [{ clientX: this.initialX() }] }),
-      map(m => this.finalX.set(m.touches[0].clientX))
-    )));
+      return t;
+    }), 
+      switchMap(_ => touchMove$.pipe(
+        map(m => {this.x.set(m.touches[0].clientX); return m;}),
+        takeUntil(touchEnd$),
+        last(undefined, { touches: [{ clientX: this.initialX() }] }),
+        map(m => this.finalX.set(m.touches[0].clientX))
+    ))
+  );
     swipe$.subscribe({
       next: () => {
         const diff = this.initialX() - this.finalX();
+        console.log(diff);
+        this.offset = diff;
         if(Math.abs(diff) >= this.threshold) {
           diff > 0 ? this.goNext() : this.goPrev();
-        }
+          this.transition = true;
+        } else
+        this.clearCoordinates();
       },
     })
   }
