@@ -17,7 +17,7 @@
   background-repeat: no-repeat;
   background-size: 100% auto;
   height: 100%;
-  transition: translate .5s ease-in-out;
+  transition: translate .3s ease-in-out;
 }
 
 .banner-overlay {

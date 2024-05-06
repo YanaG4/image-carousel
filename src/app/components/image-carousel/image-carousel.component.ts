@@ -17,6 +17,8 @@ export class ImageCarouselComponent implements AfterViewInit {
   initialX = signal<number>(0);
   x = signal<number>(0);
   finalX = signal<number>(0);
+  diff = computed<number>(() => {const d = this.initialX() - this.x(); console.log(d); return d;
+  });
   private threshold = 60;
 
   constructor() {
@@ -32,7 +34,10 @@ export class ImageCarouselComponent implements AfterViewInit {
     const touchStart$ = fromEvent<TouchEvent>(document, 'touchstart');
     const touchMove$ = fromEvent<TouchEvent>(document, 'touchmove');
     const touchEnd$ = fromEvent<TouchEvent>(document, 'touchend');
-    const swipe$ = touchStart$.pipe(map(t => {this.initialX.set(t.touches[0].clientX); return t;}), 
+    const swipe$ = touchStart$.pipe(map(t => {
+      this.initialX.set(t.touches[0].clientX); 
+      this.x.set(t.touches[0].clientX);
+      return t;}), 
       switchMap(_ => touchMove$.pipe(map(m => {this.x.set(m.touches[0].clientX); return m;}),
       takeUntil(touchEnd$),
       last(undefined, { touches: [{ clientX: this.initialX() }] }),
