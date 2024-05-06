@@ -16,19 +16,17 @@ export class ImageCarouselComponent implements AfterViewInit {
   initialX = signal<number>(0);
   x = signal<number>(0);
   finalX = signal<number>(0);
-  transition = false;
+  transition = true;
   diff = computed<number>(() => this.initialX() - this.x());
   private threshold = 80;
-  offset = 0;
-  width = window.innerWidth;
 
   constructor() {
-    // effect(() => {
-    //   const intervalId = setInterval(() => {
-    //     this.goNext();
-    //   }, 10000);
-    //   return () => clearInterval(intervalId);
-    // });
+    effect(() => {
+      const intervalId = setInterval(() => {
+        if(this.x() === 0) this.goNext();
+      }, 10000);
+      return () => clearInterval(intervalId);
+    });
   }
 
   ngAfterViewInit() {
@@ -54,7 +52,6 @@ export class ImageCarouselComponent implements AfterViewInit {
       next: () => {
         const diff = this.initialX() - this.finalX();
         console.log(diff);
-        this.offset = diff;
         if(Math.abs(diff) >= this.threshold) {
           diff > 0 ? this.goNext() : this.goPrev();
           this.transition = true;
