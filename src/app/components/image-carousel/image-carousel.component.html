@@ -1,1 +1,6 @@
-<p>image-carousel works!</p>
+@for(banner of banners(); track banner.title) {
+  <div class="">
+    <img [src]="banner.image" />
+    <img [src]="banner.bgImage" />
+  </div>
+}

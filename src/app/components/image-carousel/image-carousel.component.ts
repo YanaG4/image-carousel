@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { Banner } from '../../model/banner.interface';
 
 @Component({
   selector: 'app-image-carousel',
@@ -8,5 +9,5 @@ import { Component } from '@angular/core';
   styleUrl: './image-carousel.component.css'
 })
 export class ImageCarouselComponent {
-
+  banners = input<Banner[]>()
 }
