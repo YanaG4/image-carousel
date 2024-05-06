@@ -35,7 +35,6 @@ export class ImageCarouselComponent implements AfterViewInit {
     const touchEnd$ = fromEvent<TouchEvent>(document, 'touchend');
     const swipe$ = touchStart$.pipe(
       map(t => {
-        
       this.transition = false;
       this.initialX.set(t.touches[0].clientX); 
       this.x.set(t.touches[0].clientX);
@@ -45,7 +44,7 @@ export class ImageCarouselComponent implements AfterViewInit {
         map(m => {this.x.set(m.touches[0].clientX); return m;}),
         takeUntil(touchEnd$),
         last(undefined, { touches: [{ clientX: this.initialX() }] }),
-        map(m => this.finalX.set(m.touches[0].clientX))
+        map(m => {this.finalX.set(m.touches[0].clientX); this.transition = true;})
     ))
   );
     swipe$.subscribe({
