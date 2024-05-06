@@ -3,4 +3,6 @@ export interface Banner {
   text: string,
   bgImage: string,
   image: string,
+  ctaText?: string,
+  link: string,
 }

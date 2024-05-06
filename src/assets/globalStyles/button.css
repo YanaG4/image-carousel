@@ -1,0 +1,28 @@
+.btn--outlined {
+  all: unset;
+  min-width: 140px;
+  height: 40px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 40px;
+  border: 2px solid white;
+  background-color: transparent;
+  color: white;
+  cursor: pointer;
+}
+
+.btn--outlined:focus-visible {
+  outline: 2px solid white;
+}
+
+.btn--outlined:hover {
+  border: 2px solid #FFDC4D;
+  color: #FFDC4D;
+}
+
+.btn--outlined:active {
+  border: 2px solid #FFDC4D;
+  color: #FFDC4D;
+  background-color: #ffdb4d10;
+}
