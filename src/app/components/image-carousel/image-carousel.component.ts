@@ -3,6 +3,7 @@ import { Banner } from '../../model/banner.interface';
 import { CommonModule } from '@angular/common';
 import { fromEvent, interval, last, map, switchMap, takeLast, takeUntil, throttle } from 'rxjs';
 import { BannerComponent } from '../banner/banner.component';
+import { bannerData as data } from '../../store/bannerData';
 
 @Component({
   selector: 'app-image-carousel',
@@ -12,7 +13,7 @@ import { BannerComponent } from '../banner/banner.component';
   styleUrl: './image-carousel.component.css'
 })
 export class ImageCarouselComponent implements AfterViewInit, OnInit {
-  banners = input<Banner[]>([]);
+  banners = signal<Banner[]>([]);
   infiniteBanners: Banner[] = [];
 
   activeBannerIndex = signal<number>(1);
@@ -35,6 +36,8 @@ export class ImageCarouselComponent implements AfterViewInit, OnInit {
   }
   
   ngOnInit(): void {
+    this.banners.set(data);
+
     if (this.banners().length > 0) {
       this.infiniteBanners = [
         this.banners()[this.banners().length - 1],

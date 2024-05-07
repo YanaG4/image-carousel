@@ -1,8 +1,6 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, effect, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ImageCarouselComponent } from './components/image-carousel/image-carousel.component';
-import { Banner } from './model/banner.interface';
-import { bannerData as data } from './store/bannerData';
 import { ScreenSizeService } from './services/screen-size.service';
 
 @Component({
@@ -12,12 +10,13 @@ import { ScreenSizeService } from './services/screen-size.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
-  bannerData = signal<Banner[]>([]);
+export class AppComponent {
   screenSizeService = inject(ScreenSizeService);
   isMobileView = this.screenSizeService.isMobile;
-
-  ngOnInit(): void {
-    this.bannerData.set(data);
-  }
+  constructor() {
+    effect(() => {
+      console.log(this.isMobileView());
+    });
+    
+  }  
 }

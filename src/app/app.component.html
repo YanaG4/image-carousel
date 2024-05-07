@@ -1,4 +1,8 @@
-<section class="banners">
-  <app-image-carousel [banners]="bannerData()" />
-</section>
+@if (isMobileView()) {
+  <section class="banners">
+    <app-image-carousel />
+  </section>
+} @else {
+  <p class="notification">Please reduce your screen size to <b>< 600px</b> wide</p>
+}
 <router-outlet />
