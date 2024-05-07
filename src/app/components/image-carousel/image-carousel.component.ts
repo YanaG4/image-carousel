@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, computed, effect, inject, input, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, computed, effect, inject, input, signal } from '@angular/core';
 import { Banner } from '../../model/banner.interface';
 import { CommonModule } from '@angular/common';
 import { fromEvent, interval, last, map, switchMap, takeLast, takeUntil, throttle } from 'rxjs';
@@ -11,10 +11,11 @@ import { BannerComponent } from '../banner/banner.component';
   templateUrl: './image-carousel.component.html',
   styleUrl: './image-carousel.component.css'
 })
-export class ImageCarouselComponent implements AfterViewInit {
+export class ImageCarouselComponent implements AfterViewInit, OnInit {
   banners = input<Banner[]>([]);
+  infiniteBanners: Banner[] = [];
 
-  activeBannerIndex = signal<number>(0);
+  activeBannerIndex = signal<number>(1);
   initialX = signal<number>(0);
   x = signal<number>(0);
   finalX = signal<number>(0);
@@ -31,7 +32,16 @@ export class ImageCarouselComponent implements AfterViewInit {
       return () => clearInterval(intervalId);
     });
   }
-
+  
+  ngOnInit(): void {
+    if (this.banners().length > 0) {
+      this.infiniteBanners = [
+        this.banners()[this.banners().length - 1],
+        ...this.banners(),
+        this.banners()[0]
+      ];
+    }
+  }
   ngAfterViewInit() {
     const carouselElement = this.ref.nativeElement;
     const touchStart$ = fromEvent<TouchEvent>(carouselElement, 'touchstart');
@@ -65,17 +75,25 @@ export class ImageCarouselComponent implements AfterViewInit {
   }
 
   goNext() {
-    if (this.banners().length - 1 === this.activeBannerIndex())
-      this.activeBannerIndex.set(0)
-    else 
-      this.activeBannerIndex.update((i) => i + 1);
+    this.activeBannerIndex.update((i) => i + 1);
+    this.transition = true;
+    if (this.activeBannerIndex() === this.infiniteBanners.length - 1) {
+      setTimeout(() => {
+        this.transition = false;
+        this.activeBannerIndex.set(1);
+      }, 300);
+    }
     this.clearCoordinates();
   }
   goPrev() {
-    if (this.activeBannerIndex() === 0)
-      this.activeBannerIndex.set(this.banners().length - 1)
-    else 
-      this.activeBannerIndex.update((i) => i - 1);
+    this.activeBannerIndex.update((i) => i - 1);
+    this.transition = true;
+    if (this.activeBannerIndex() === 0) {
+      setTimeout(() => {
+        this.transition = false;
+        this.activeBannerIndex.set(this.infiniteBanners.length - 2);
+      }, 300);
+    }
     this.clearCoordinates();
   }
 
