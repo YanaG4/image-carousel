@@ -1,17 +1,10 @@
 <div class="banners-container">
 @for(banner of banners(); track banner.id) {
-  <div class="banner-container"
+  <div 
+    class="banner-container"
     [ngStyle]="{'transform': 'translateX(calc(' + (-100*activeBannerIndex()) + '% + ' + (-diff()) + 'px))'}"
-    [ngClass]="{'banner-container--transition': transition}"
-  >
-    <div class="banner-image-container" [ngStyle]="{'background-image': 'url(' + banner.bgImage + ')'}"> 
-      <div class="banner-overlay">
-        <img [src]="banner.image" alt="" />
-        <h2>{{ banner.title }}</h2>
-        <p>{{ banner.text }}</p>
-        <button class="btn--outlined">{{ banner.ctaText }}</button>
-      </div>
-    </div>
+    [ngClass]="{'banner-container--transition': transition}">
+    <app-banner [banner]="banner" />
   </div>
 }
 </div>

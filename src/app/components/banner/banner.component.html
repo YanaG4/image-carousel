@@ -1,0 +1,8 @@
+<div class="banner-image-container" [ngStyle]="{'background-image': 'url(' + banner.bgImage + ')'}">
+  <div class="banner-overlay">
+    <img [src]="banner.image" alt="" />
+    <h2 [innerHTML]="title"></h2>
+    <p [innerHTML]="text"></p>
+    <button class="btn--outlined">{{ banner.ctaText }}</button>
+  </div>
+</div>

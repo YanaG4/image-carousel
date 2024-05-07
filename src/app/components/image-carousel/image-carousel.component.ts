@@ -2,16 +2,18 @@ import { AfterViewInit, Component, ElementRef, computed, effect, inject, input, 
 import { Banner } from '../../model/banner.interface';
 import { CommonModule } from '@angular/common';
 import { fromEvent, interval, last, map, switchMap, takeLast, takeUntil, throttle } from 'rxjs';
+import { BannerComponent } from '../banner/banner.component';
 
 @Component({
   selector: 'app-image-carousel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, BannerComponent],
   templateUrl: './image-carousel.component.html',
   styleUrl: './image-carousel.component.css'
 })
 export class ImageCarouselComponent implements AfterViewInit {
   banners = input<Banner[]>([]);
+
   activeBannerIndex = signal<number>(0);
   initialX = signal<number>(0);
   x = signal<number>(0);
@@ -20,6 +22,7 @@ export class ImageCarouselComponent implements AfterViewInit {
   diff = computed<number>(() => this.initialX() - this.x());
   private threshold = 80;
   private ref = inject(ElementRef);
+  
   constructor() {
     effect(() => {
       const intervalId = setInterval(() => {
