@@ -1,9 +1,15 @@
-import { AfterViewInit, Component, ElementRef, OnInit, computed, effect, inject, input, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { Banner } from '../../model/banner.interface';
 import { CommonModule } from '@angular/common';
-import { fromEvent, interval, last, map, switchMap, takeLast, takeUntil, throttle } from 'rxjs';
+import { fromEvent, last, map, switchMap, takeUntil } from 'rxjs';
 import { BannerComponent } from '../banner/banner.component';
 import { bannerData as data } from '../../store/bannerData';
+
+interface xCoordinates {
+  initialX: number;
+  x: number;
+  finalX: number;
+}
 
 @Component({
   selector: 'app-image-carousel',
@@ -17,11 +23,13 @@ export class ImageCarouselComponent implements AfterViewInit, OnInit {
   infiniteBanners: Banner[] = [];
 
   activeBannerIndex = signal<number>(1);
-  initialX = signal<number>(0);
-  x = signal<number>(0);
-  finalX = signal<number>(0);
-  transition = true;
-  diff = computed<number>(() => this.initialX() - this.x());
+  xCoordinates = signal<xCoordinates>({
+    initialX: 0,
+    x: 0,
+    finalX: 0,
+  });
+  transition = signal<boolean>(true);
+  diff = computed<number>(() => this.xCoordinates().initialX - this.xCoordinates().x);
   private threshold = 80;
   private ref = inject(ElementRef);
   
@@ -29,7 +37,7 @@ export class ImageCarouselComponent implements AfterViewInit, OnInit {
     effect(() => {
       if(this.banners().length <= 1) return;
       const intervalId = setInterval(() => {
-        if(this.x() === 0) this.goNext();
+        if(this.xCoordinates().x === 0) this.goNext();
       }, 10000);
       return () => clearInterval(intervalId);
     });
@@ -54,25 +62,33 @@ export class ImageCarouselComponent implements AfterViewInit, OnInit {
     const touchEnd$ = fromEvent<TouchEvent>(carouselElement, 'touchend');
     const swipe$ = touchStart$.pipe(
       map(t => {
-      this.transition = false;
-      this.initialX.set(t.touches[0].clientX); 
-      this.x.set(t.touches[0].clientX);
+      this.transition.set(false);
+      const x = t.touches[0].clientX;
+      this.xCoordinates.update(prev => ({...prev, initialX: x, x}));
       return t;
     }), 
       switchMap(_ => touchMove$.pipe(
-        map(m => {this.x.set(m.touches[0].clientX); return m;}),
+        map(m => {
+          const x = m.touches[0].clientX;
+          this.xCoordinates.update(prev => ({...prev, x}));
+          return m; 
+        }),
         takeUntil(touchEnd$),
-        last(undefined, { touches: [{ clientX: this.initialX() }] }),
-        map(m => {this.finalX.set(m.touches[0].clientX); this.transition = true;})
+        last(undefined, { touches: [{ clientX: this.xCoordinates().initialX }] }),
+        map(m => {
+          const x = m.touches[0].clientX;
+          this.xCoordinates.update(prev => ({...prev, finalX: x}));
+          this.transition.set(true);
+        })
     ))
   );
     swipe$.subscribe({
       next: () => {
-        const diff = this.initialX() - this.finalX();
+        const diff = this.xCoordinates().initialX - this.xCoordinates().finalX;
         console.log(diff);
         if(Math.abs(diff) >= this.threshold) {
           diff > 0 ? this.goNext() : this.goPrev();
-          this.transition = true;
+          this.transition.set(true);
         } else
         this.clearCoordinates();
       },
@@ -81,10 +97,10 @@ export class ImageCarouselComponent implements AfterViewInit, OnInit {
 
   goNext() {
     this.activeBannerIndex.update((i) => i + 1);
-    this.transition = true;
+    this.transition.set(true);
     if (this.activeBannerIndex() === this.infiniteBanners.length - 1) {
       setTimeout(() => {
-        this.transition = false;
+        this.transition.set(false);
         this.activeBannerIndex.set(1);
       }, 300);
     }
@@ -92,10 +108,10 @@ export class ImageCarouselComponent implements AfterViewInit, OnInit {
   }
   goPrev() {
     this.activeBannerIndex.update((i) => i - 1);
-    this.transition = true;
+    this.transition.set(true);
     if (this.activeBannerIndex() === 0) {
       setTimeout(() => {
-        this.transition = false;
+        this.transition.set(false);
         this.activeBannerIndex.set(this.infiniteBanners.length - 2);
       }, 300);
     }
@@ -103,8 +119,6 @@ export class ImageCarouselComponent implements AfterViewInit, OnInit {
   }
 
   clearCoordinates() { 
-    this.initialX.set(0);
-    this.finalX.set(0);
-    this.x.set(0);
+    this.xCoordinates.set({ initialX: 0, finalX: 0, x: 0 });
   }
 }
