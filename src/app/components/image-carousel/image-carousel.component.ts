@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, computed, effect, input, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, computed, effect, inject, input, signal } from '@angular/core';
 import { Banner } from '../../model/banner.interface';
 import { CommonModule } from '@angular/common';
 import { fromEvent, interval, last, map, switchMap, takeLast, takeUntil, throttle } from 'rxjs';
@@ -19,7 +19,7 @@ export class ImageCarouselComponent implements AfterViewInit {
   transition = true;
   diff = computed<number>(() => this.initialX() - this.x());
   private threshold = 80;
-
+  private ref = inject(ElementRef);
   constructor() {
     effect(() => {
       const intervalId = setInterval(() => {
@@ -30,9 +30,10 @@ export class ImageCarouselComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    const touchStart$ = fromEvent<TouchEvent>(document, 'touchstart');
-    const touchMove$ = fromEvent<TouchEvent>(document, 'touchmove');
-    const touchEnd$ = fromEvent<TouchEvent>(document, 'touchend');
+    const carouselElement = this.ref.nativeElement;
+    const touchStart$ = fromEvent<TouchEvent>(carouselElement, 'touchstart');
+    const touchMove$ = fromEvent<TouchEvent>(carouselElement, 'touchmove');
+    const touchEnd$ = fromEvent<TouchEvent>(carouselElement, 'touchend');
     const swipe$ = touchStart$.pipe(
       map(t => {
       this.transition = false;
