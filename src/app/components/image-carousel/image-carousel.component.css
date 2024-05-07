@@ -4,10 +4,10 @@
   color: white;
   height: 100%;
   overflow: hidden;
+  background-color: black;
 }
 
-.banner-container {
-  background-color: black;
+.banner-container { 
   height: 100%;
 }
 
@@ -49,7 +49,7 @@
   height: 100%;
 }
 
-.banner-image-container--transition {
+.banner-container--transition {
   transition: transform .3s ease;
 }
 
