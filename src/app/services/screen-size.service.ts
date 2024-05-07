@@ -6,10 +6,16 @@ import { Injectable, OnDestroy, computed, signal } from '@angular/core';
 export class ScreenSizeService implements OnDestroy {
   isMobile = signal(this.getIsMobileScreen());
   private resizeListener: () => void;
+  private resizeTimeout?: number;
 
   constructor() {
     this.resizeListener = () => {
-      this.isMobile.set(this.getIsMobileScreen());
+      if (this.resizeTimeout) {
+        clearTimeout(this.resizeTimeout);
+      }
+      this.resizeTimeout = window.setTimeout(() => {
+        this.isMobile.set(this.getIsMobileScreen());
+      }, 100);
     };
     window.addEventListener('resize', this.resizeListener);
   }
@@ -21,5 +27,8 @@ export class ScreenSizeService implements OnDestroy {
 
   ngOnDestroy(): void {
     window.removeEventListener('resize', this.resizeListener);
+    if (this.resizeTimeout) {
+      clearTimeout(this.resizeTimeout);
+    }
   }
 }
