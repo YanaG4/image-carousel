@@ -26,6 +26,7 @@ export class ImageCarouselComponent implements AfterViewInit, OnInit {
   
   constructor() {
     effect(() => {
+      if(this.banners().length <= 1) return;
       const intervalId = setInterval(() => {
         if(this.x() === 0) this.goNext();
       }, 10000);
@@ -43,6 +44,7 @@ export class ImageCarouselComponent implements AfterViewInit, OnInit {
     }
   }
   ngAfterViewInit() {
+    if(this.banners().length <= 1) return;
     const carouselElement = this.ref.nativeElement;
     const touchStart$ = fromEvent<TouchEvent>(carouselElement, 'touchstart');
     const touchMove$ = fromEvent<TouchEvent>(carouselElement, 'touchmove');
