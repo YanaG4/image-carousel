@@ -1,3 +1,4 @@
+@if (banner) { 
 <div class="banner-image-container" [ngStyle]="{'background-image': 'url(' + banner.bgImage + ')'}">
   <div class="banner-overlay">
     <img [src]="banner.image" alt="" />
@@ -6,3 +7,4 @@
     <button class="btn--outlined">{{ banner.ctaText }}</button>
   </div>
 </div>
+}

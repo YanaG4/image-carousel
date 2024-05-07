@@ -18,8 +18,8 @@ export class BannerComponent implements OnInit {
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit(): void {
-    this.text = this.sanitize(this.banner.text);
-    this.title = this.sanitize(this.banner.title);
+    this.text = this.sanitize(this.banner?.text);
+    this.title = this.sanitize(this.banner?.title);
   }
 
   private sanitize(text: string): SafeHtml {
