@@ -12,11 +12,8 @@ import { ScreenSizeService } from './services/screen-size.service';
 })
 export class AppComponent {
   screenSizeService = inject(ScreenSizeService);
-  isMobileView = this.screenSizeService.isMobile;
-  constructor() {
-    effect(() => {
-      console.log(this.isMobileView());
-    });
-    
-  }  
+  get isMobileView() {
+    return this.screenSizeService.isMobile();
+  }
+  constructor() {}  
 }
