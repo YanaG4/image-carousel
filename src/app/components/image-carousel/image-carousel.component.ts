@@ -46,12 +46,15 @@ export class ImageCarouselComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.banners.set(data);
 
-    if (this.banners().length > 0) {
+    if (this.banners().length > 1) {
       this.infiniteBanners = [
         this.banners()[this.banners().length - 1],
         ...this.banners(),
         this.banners()[0]
       ];
+    } else if (this.banners().length === 1) {
+      this.infiniteBanners = [ ...this.banners() ];
+      this.activeBannerIndex.set(0);
     }
   }
   ngAfterViewInit() {
