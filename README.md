@@ -1,27 +1,19 @@
-# Carousel
+# Infinite Image Carousel
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.5.
+## Features
+- Swipeable carousel (on touch)
+- Drag & drop effect
+- Auto swipe banners each 10 seconds
+- On screen sizes >= 600 display notification text
+- Highlights important text on the banners
+- Supports even the smallest screens
+- Smooth animation on changing banners
+- Tests
 
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Approach
+Infinite carousel:
+- Create the duplicates of the 1st and last banners
+- If we reach the last banner (the duplicate of the first one) replace it with the real first banner
+- Do the same for the very first (the duplicate of the last one) banner
+  
+![app demo](https://github.com/YanaG4/assets/blob/main/app.gif)
