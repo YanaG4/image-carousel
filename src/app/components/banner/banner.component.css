@@ -32,12 +32,12 @@
   align-items: center;
   text-align: center;
   gap: 16px;
-  width: 100%;
+  width: 100vw;
   height: 100%;
 }
 
 .banner-overlay ::ng-deep span {
-  color: #FFDC4D;
+  color: var(--yellow-500);
 }
 
 @media (max-width: 430px){

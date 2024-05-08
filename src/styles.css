@@ -1,4 +1,5 @@
 @import url("./assets//globalStyles//button.css");
+@import url("./assets//globalStyles//variables.css");
 
 * {
   margin: 0;
