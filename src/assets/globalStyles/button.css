@@ -1,0 +1,32 @@
+.btn {
+  all: unset;
+  min-width: 140px;
+  height: 40px;
+  text-align: center;
+  font-size: 16;
+  line-height: 150%;
+  font-weight: 600;
+  border-radius: 40px;
+  color: white;
+  cursor: pointer;
+}
+
+.btn--outlined { 
+  border: 2px solid white;
+  background-color: transparent;
+}
+
+.btn--outlined:focus-visible {
+  outline: 2px solid white;
+}
+
+.btn--outlined:hover {
+  border: 2px solid var(--yellow-500);
+  color: var(--yellow-500);
+}
+
+.btn--outlined:active {
+  border: 2px solid var(--yellow-500);
+  color: var(--yellow-500);
+  background-color: var(--yellow-500-01);
+}

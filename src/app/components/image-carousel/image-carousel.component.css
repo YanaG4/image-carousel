@@ -1,0 +1,16 @@
+.banners-container {
+  position: relative;
+  display: flex;
+  color: white;
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(to bottom right, #4e238f, #231446);
+}
+
+.banner-container { 
+  height: 100%;
+}
+
+.banner-container--transition {
+  transition: transform .3s ease;
+}

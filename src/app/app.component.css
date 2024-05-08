@@ -1,0 +1,9 @@
+.banners {
+  height: 450px;
+  width: 100vw;
+}
+
+.notification {
+  text-align: center;
+  padding: 20px 0;
+}

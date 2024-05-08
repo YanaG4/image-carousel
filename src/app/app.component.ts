@@ -1,13 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ImageCarouselComponent } from './components/image-carousel/image-carousel.component';
+import { ScreenSizeService } from './services/screen-size.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, ImageCarouselComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'carousel';
+  screenSizeService = inject(ScreenSizeService);
+  get isMobileView() {
+    return this.screenSizeService.isMobile();
+  }
+  constructor() {}  
 }

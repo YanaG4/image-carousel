@@ -1,29 +1,35 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { ScreenSizeService } from './services/screen-size.service';
 
 describe('AppComponent', () => {
+  let app: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+  let screenSizeService: ScreenSizeService;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
+      providers: [ScreenSizeService]
     }).compileComponents();
+
+    fixture = TestBed.createComponent(AppComponent);
+    app = fixture.componentInstance;
+    screenSizeService = TestBed.inject(ScreenSizeService);
   });
 
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
-
-  it(`should have the 'carousel' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('carousel');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, carousel');
-  });
+  describe('AppView', () => {
+    it('should render text for desktop screen sizes', () => {
+      spyOnProperty(app, 'isMobileView', 'get').and.returnValue(false);
+      fixture.detectChanges();
+      expect(document.body.textContent).toContain('600');
+    });
+    it('should render carousel for mobile screen sizes', () => {
+      spyOnProperty(app, 'isMobileView', 'get').and.returnValue(true);
+      fixture.detectChanges();
+      expect(document.querySelector('.banners')).toBeTruthy();
+    });
+  })
 });

@@ -1,0 +1,10 @@
+<div class="banners-container">
+@for(banner of infiniteBanners; track $index) {
+  <div 
+    class="banner-container"
+    [ngStyle]="{'transform': 'translateX(calc(' + (-100*activeBannerIndex()) + '% + ' + (-diff()) + 'px))'}"
+    [ngClass]="{'banner-container--transition': transition()}">
+    <app-banner [banner]="banner" />
+  </div>
+}
+</div>
