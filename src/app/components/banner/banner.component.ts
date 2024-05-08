@@ -12,6 +12,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 export class BannerComponent implements OnInit {
   @Input() banner!: Banner;
+  // sanitize banner's text and header as there could be html from the server (e.g. highlighted text)
+  // highlited text is implemented with <span> tag
   text: SafeHtml = '';
   title: SafeHtml = '';
 

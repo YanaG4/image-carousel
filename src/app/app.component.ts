@@ -1,4 +1,4 @@
-import { Component, OnInit, effect, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ImageCarouselComponent } from './components/image-carousel/image-carousel.component';
 import { ScreenSizeService } from './services/screen-size.service';
