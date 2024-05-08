@@ -21,8 +21,12 @@ export class ScreenSizeService implements OnDestroy {
   }
 
   private getIsMobileScreen(): boolean {
-    const width = window.innerWidth;
+    const width = this.getInnerWidth();
     return width < 600;
+  }
+
+  getInnerWidth(): number {
+    return window.innerWidth;
   }
 
   ngOnDestroy(): void {
